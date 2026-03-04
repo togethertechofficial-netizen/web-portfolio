@@ -26,8 +26,8 @@ const Hero = () => {
                         Professional Web Development for <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-teal to-blue-400">Local Businesses</span>
                     </h1>
 
-                    <p className="text-lg md:text-xl text-muted-gray mb-10 max-w-2xl font-body leading-relaxed">
-                        Beautiful, fast, and mobile-optimized websites that turn visitors into loyal customers. Stand out in  digital landscape.
+                    <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl font-body leading-relaxed text-shadow-sm">
+                        Beautiful, fast, and mobile-optimized websites that turn visitors into loyal customers. Stand out in the digital landscape.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">

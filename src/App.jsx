@@ -9,6 +9,7 @@ import WhyChooseUs from './components/WhyChooseUs';
 import FAQ from './components/FAQ';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import Snowfall from './components/Snowfall';
 
 function App() {
   const totalFrames = 80;
@@ -128,9 +129,12 @@ function App() {
       {/* Background Canvas Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <canvas ref={canvasRef} className="w-full h-full block" />
-        <div className="absolute inset-0 bg-dark-bg/60 backdrop-blur-[1px]"></div>
+        <div className="absolute inset-0 bg-dark-bg/75 backdrop-blur-[1px]"></div>
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-dark-bg to-transparent"></div>
       </div>
+
+      {/* Snowfall Layer */}
+      <Snowfall />
 
       {/* Content Layer */}
       <div className="relative z-10 w-full flex flex-col items-center">
