@@ -1,20 +1,52 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Mail, Phone, MessageCircle, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
+
+const SERVICE_ID = 'service_6qmqkxm';
+const TEMPLATE_ID = 'template_gsdmk4z';
+const PUBLIC_KEY = '2Ps1WxjxlV2WQEwEm';
 
 const ContactSection = () => {
-    const [formStatus, setFormStatus] = useState('idle'); // idle, submitting, success
+    const formRef = useRef(null);
+    const [formStatus, setFormStatus] = useState('idle'); // idle | submitting | success | error
+    const [formData, setFormData] = useState({
+        user_name: '',
+        email: '',
+        whatsapp: '',
+        business_type: '',
+        message: '',
+    });
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setFormStatus('submitting');
 
-        // Simulate API call
-        setTimeout(() => {
+        // Build template params matching your EmailJS template variables
+        const templateParams = {
+            user_name: formData.user_name,
+            email: formData.email,
+            whatsapp: formData.whatsapp,
+            business_type: formData.business_type,
+            message: formData.message,
+            time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        };
+
+        try {
+            await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
             setFormStatus('success');
-            // Reset after a few seconds
+            setFormData({ user_name: '', email: '', whatsapp: '', business_type: '', message: '' });
+            setTimeout(() => setFormStatus('idle'), 6000);
+        } catch (err) {
+            console.error('EmailJS error:', err);
+            setFormStatus('error');
             setTimeout(() => setFormStatus('idle'), 5000);
-        }, 1500);
+        }
     };
 
     return (
@@ -56,7 +88,7 @@ const ContactSection = () => {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="space-y-6"
                         >
-                            <a href="mailto:hello@TOGETHER TECH.com" className="flex items-center gap-4 text-light-muted hover:text-accent-teal transition-colors group">
+                            <a href="mailto:togethertechofficial@gmail.com" className="flex items-center gap-4 text-light-muted hover:text-accent-teal transition-colors group">
                                 <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-primary-blue/30 transition-colors">
                                     <Mail size={20} className="group-hover:text-accent-teal" />
                                 </div>
@@ -66,7 +98,7 @@ const ContactSection = () => {
                                 </div>
                             </a>
 
-                            <a href="tel:+919876543210" className="flex items-center gap-4 text-light-muted hover:text-accent-teal transition-colors group">
+                            <a href="tel:+919047549682" className="flex items-center gap-4 text-light-muted hover:text-accent-teal transition-colors group">
                                 <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-primary-blue/30 transition-colors">
                                     <Phone size={20} className="group-hover:text-accent-teal" />
                                 </div>
@@ -110,25 +142,45 @@ const ContactSection = () => {
                                     Thank you for reaching out. We will analyze your requirements and get back to you via email or WhatsApp within a few hours.
                                 </p>
                             </motion.div>
+                        ) : formStatus === 'error' ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="bg-red-500/10 border border-red-500/30 rounded-2xl p-10 flex flex-col items-center text-center shadow-lg"
+                            >
+                                <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center text-white mb-6 shadow-[0_0_30px_rgba(239,68,68,0.4)]">
+                                    <AlertCircle size={40} />
+                                </div>
+                                <h3 className="text-2xl font-display font-bold text-white mb-2">Something went wrong</h3>
+                                <p className="text-light-muted">
+                                    Your message couldn't be sent. Please try again or reach us directly on WhatsApp.
+                                </p>
+                            </motion.div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                            <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="name">Your Name</label>
+                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="user_name">Your Name</label>
                                         <input
                                             type="text"
-                                            id="name"
+                                            id="user_name"
+                                            name="user_name"
                                             required
+                                            value={formData.user_name}
+                                            onChange={handleChange}
                                             placeholder="John Doe"
                                             className="bg-dark-bg/50 border border-gray-700 rounded-xl px-4 py-3.5 text-light-text placeholder-gray-600 focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition-all"
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="phone">WhatsApp Number</label>
+                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="whatsapp">WhatsApp Number</label>
                                         <input
                                             type="tel"
-                                            id="phone"
+                                            id="whatsapp"
+                                            name="whatsapp"
                                             required
+                                            value={formData.whatsapp}
+                                            onChange={handleChange}
                                             placeholder="+91-XXXXX-XXXXX"
                                             className="bg-dark-bg/50 border border-gray-700 rounded-xl px-4 py-3.5 text-light-text placeholder-gray-600 focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition-all"
                                         />
@@ -140,24 +192,31 @@ const ContactSection = () => {
                                     <input
                                         type="email"
                                         id="email"
+                                        name="email"
                                         required
+                                        value={formData.email}
+                                        onChange={handleChange}
                                         placeholder="john@yourbusiness.com"
                                         className="bg-dark-bg/50 border border-gray-700 rounded-xl px-4 py-3.5 text-light-text placeholder-gray-600 focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition-all"
                                     />
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="business">Business Type</label>
+                                    <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="business_type">Business Type</label>
                                     <select
-                                        id="business"
+                                        id="business_type"
+                                        name="business_type"
+                                        required
+                                        value={formData.business_type}
+                                        onChange={handleChange}
                                         className="bg-dark-bg/50 border border-gray-700 rounded-xl px-4 py-3.5 text-light-text focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition-all appearance-none"
                                     >
-                                        <option value="" disabled selected>Select your industry</option>
-                                        <option value="restaurant">Restaurant / Cafe</option>
-                                        <option value="realestate">Real Estate / Construction</option>
-                                        <option value="retail">Retail / E-commerce</option>
-                                        <option value="service">Service Provider (Medical/Consulting)</option>
-                                        <option value="other">Other</option>
+                                        <option value="" disabled>Select your industry</option>
+                                        <option value="Restaurant / Cafe">Restaurant / Cafe</option>
+                                        <option value="Real Estate / Construction">Real Estate / Construction</option>
+                                        <option value="Retail / E-commerce">Retail / E-commerce</option>
+                                        <option value="Service Provider (Medical/Consulting)">Service Provider (Medical/Consulting)</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
 
@@ -165,8 +224,11 @@ const ContactSection = () => {
                                     <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="message">Message Details</label>
                                     <textarea
                                         id="message"
+                                        name="message"
                                         rows={4}
                                         required
+                                        value={formData.message}
+                                        onChange={handleChange}
                                         placeholder="Tell us about your current website or what you're looking to build..."
                                         className="bg-dark-bg/50 border border-gray-700 rounded-xl px-4 py-3.5 text-light-text placeholder-gray-600 focus:outline-none focus:border-accent-teal focus:ring-1 focus:ring-accent-teal transition-all resize-none"
                                     ></textarea>
@@ -179,17 +241,18 @@ const ContactSection = () => {
                                         ? 'bg-primary-blue/50 text-white cursor-not-allowed'
                                         : 'bg-primary-blue hover:bg-accent-teal text-white shadow-[0_0_20px_rgba(13,165,184,0.1)] hover:shadow-[0_0_25px_rgba(13,165,184,0.5)]'
                                         }`}
-                                >    {formStatus === 'submitting' ? (
-                                    <span className="flex items-center gap-2">
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                        Sending...
-                                    </span>
-                                ) : (
-                                    <>
-                                        Request Free Quote
-                                        <Send size={18} />
-                                    </>
-                                )}
+                                >
+                                    {formStatus === 'submitting' ? (
+                                        <span className="flex items-center gap-2">
+                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                            Sending...
+                                        </span>
+                                    ) : (
+                                        <>
+                                            Request Free Quote
+                                            <Send size={18} />
+                                        </>
+                                    )}
                                 </button>
                             </form>
                         )}
