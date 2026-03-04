@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -11,15 +11,21 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import Snowfall from './components/Snowfall';
 
+// Detect mobile once at module level (avoids repeated checks)
+const isMobile = () => window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+
 function App() {
   const totalFrames = 80;
   const canvasRef = useRef(null);
   const imagesRef = useRef([]);
   const targetScrollRef = useRef(0);
   const currentScrollRef = useRef(0);
+  const mobileRef = useRef(isMobile());
 
+  // ─── Desktop only: preload all frames ───────────────────────────────────────
   useEffect(() => {
-    // Preload ALL images immediately
+    if (mobileRef.current) return; // skip on mobile
+
     for (let i = 1; i <= totalFrames; i++) {
       const img = new Image();
       const frameNum = i.toString().padStart(3, '0');
@@ -29,42 +35,73 @@ function App() {
 
     const handleScroll = () => {
       const totalScroll = document.documentElement.scrollTop;
-      // Use FAQ section top as the animation endpoint so last frame lands at FAQ
       const faqSection = document.getElementById('faq');
       const endPoint = faqSection
-        ? faqSection.offsetTop - window.innerHeight * 0.3 // complete just as FAQ enters view
+        ? faqSection.offsetTop - window.innerHeight * 0.3
         : document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scroll = Math.min(1, Math.max(0, totalScroll / endPoint));
-      targetScrollRef.current = scroll;
-    }
+      targetScrollRef.current = Math.min(1, Math.max(0, totalScroll / endPoint));
+    };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // ─── Mobile only: load single static frame ───────────────────────────────────
   useEffect(() => {
+    if (!mobileRef.current) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for no transparency
+    const ctx = canvas.getContext('2d', { alpha: false });
 
-    // Handle High-DPI/Retina screens for crisp image quality
+    const setup = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    setup();
+    window.addEventListener('resize', setup);
+
+    const img = new Image();
+    img.src = '/images/BG/ezgif-frame-001.jpg';
+    img.onload = () => {
+      const w = canvas.width;
+      const h = canvas.height;
+      const canvasRatio = w / h;
+      const imgRatio = img.width / img.height;
+      let rw = img.width, rh = img.height, rx = 0, ry = 0;
+      if (canvasRatio > imgRatio) {
+        rh = img.width / canvasRatio;
+        ry = (img.height - rh) / 2;
+      } else {
+        rw = img.height * canvasRatio;
+        rx = (img.width - rw) / 2;
+      }
+      ctx.drawImage(img, rx, ry, rw, rh, 0, 0, w, h);
+    };
+
+    return () => window.removeEventListener('resize', setup);
+  }, []);
+
+  // ─── Desktop only: animated render loop ──────────────────────────────────────
+  useEffect(() => {
+    if (mobileRef.current) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: false });
+
     const setupCanvas = () => {
-      // Use devicePixelRatio for Retina display crispness
       const dpr = window.devicePixelRatio || 1;
-      const logicalWidth = window.innerWidth;
-      const logicalHeight = window.innerHeight;
-
-      canvas.width = logicalWidth * dpr;
-      canvas.height = logicalHeight * dpr;
-
-      canvas.style.width = `${logicalWidth}px`;
-      canvas.style.height = `${logicalHeight}px`;
-
+      const lw = window.innerWidth;
+      const lh = window.innerHeight;
+      canvas.width = lw * dpr;
+      canvas.height = lh * dpr;
+      canvas.style.width = `${lw}px`;
+      canvas.style.height = `${lh}px`;
       ctx.scale(dpr, dpr);
-      canvas.logicalWidth = logicalWidth;
-      canvas.logicalHeight = logicalHeight;
-      // Turn off image smoothing for a sharper render if scaled
+      canvas.logicalWidth = lw;
+      canvas.logicalHeight = lh;
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
     };
@@ -75,43 +112,28 @@ function App() {
     let animationFrameId;
 
     const render = () => {
-      // Linear Interpolation (Lerp) for super smooth easing
-      // current = current + (target - current) * smoothFactor
-      // Lower smoothFactor = more delay/fluidity
-      const ease = 0.05; // Tuned for smoother feeling
-
+      const ease = 0.05;
       currentScrollRef.current += (targetScrollRef.current - currentScrollRef.current) * ease;
-
-      // Calculate which frame we should be showing
       const exactFrame = currentScrollRef.current * (totalFrames - 1) + 1;
-      const currentFrameIndex = Math.min(totalFrames, Math.max(1, Math.round(exactFrame)));
-
-      const img = imagesRef.current[currentFrameIndex];
+      const frameIndex = Math.min(totalFrames, Math.max(1, Math.round(exactFrame)));
+      const img = imagesRef.current[frameIndex];
 
       if (img && img.complete) {
-        const logicalWidth = canvas.logicalWidth || window.innerWidth;
-        const logicalHeight = canvas.logicalHeight || window.innerHeight;
+        const lw = canvas.logicalWidth || window.innerWidth;
+        const lh = canvas.logicalHeight || window.innerHeight;
+        ctx.clearRect(0, 0, lw, lh);
 
-        ctx.clearRect(0, 0, logicalWidth, logicalHeight);
-
-
-        const canvasRatio = logicalWidth / logicalHeight;
+        const canvasRatio = lw / lh;
         const imgRatio = img.width / img.height;
-
-        let renderWidth = img.width;
-        let renderHeight = img.height;
-        let renderX = 0;
-        let renderY = 0;
-
+        let rw = img.width, rh = img.height, rx = 0, ry = 0;
         if (canvasRatio > imgRatio) {
-          renderHeight = img.width / canvasRatio;
-          renderY = (img.height - renderHeight) / 2;
+          rh = img.width / canvasRatio;
+          ry = (img.height - rh) / 2;
         } else {
-          renderWidth = img.height * canvasRatio;
-          renderX = (img.width - renderWidth) / 2;
+          rw = img.height * canvasRatio;
+          rx = (img.width - rw) / 2;
         }
-
-        ctx.drawImage(img, renderX, renderY, renderWidth, renderHeight, 0, 0, logicalWidth, logicalHeight);
+        ctx.drawImage(img, rx, ry, rw, rh, 0, 0, lw, lh);
       }
       animationFrameId = window.requestAnimationFrame(render);
     };
@@ -141,25 +163,15 @@ function App() {
         <Header />
 
         <main className="w-full flex justify-center overflow-x-hidden pt-24">
-          {/* Main Content Container */}
           <div className="w-full flex flex-col items-center">
             <Hero />
-
-            {/* The rest of the sections */}
             <HowItWorks />
-
             <CaseStudies />
-
             <PricingSection />
-
             <Testimonials />
-
             <WhyChooseUs />
-
             <FAQ />
-
             <ContactSection />
-
           </div>
         </main>
 

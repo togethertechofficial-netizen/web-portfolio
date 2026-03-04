@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
-const FLAKE_COUNT = 80;
+const FLAKE_COUNT_DESKTOP = 80;
+const FLAKE_COUNT_MOBILE = 25;
+const FLAKE_COUNT = window.innerWidth < 768 ? FLAKE_COUNT_MOBILE : FLAKE_COUNT_DESKTOP;
+
 
 function randomBetween(min, max) {
     return Math.random() * (max - min) + min;
