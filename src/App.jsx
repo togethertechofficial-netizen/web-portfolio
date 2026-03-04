@@ -32,16 +32,20 @@ function App() {
     }
 
     const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollTop;
+      const totalScroll = window.scrollY || document.documentElement.scrollTop;
       const faqSection = document.getElementById('faq');
-      const endPoint = faqSection
+      let endPoint = faqSection
         ? faqSection.offsetTop - window.innerHeight * 0.3
         : document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+      if (endPoint <= 0) endPoint = 1; // Prevent division by zero
+
       targetScrollRef.current = Math.min(1, Math.max(0, totalScroll / endPoint));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    // Run after a short delay to ensure elements are positioned on mobile
+    setTimeout(handleScroll, 100);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -50,6 +54,9 @@ function App() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
+
+    // We store the last valid frame index to fallback if a frame is unloaded
+    let lastDrawnFrame = 1;
 
     const setupCanvas = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -73,12 +80,26 @@ function App() {
 
     const render = () => {
       const ease = 0.05;
+
+      // Safety check for NaN values
+      if (isNaN(targetScrollRef.current)) targetScrollRef.current = 0;
+
       currentScrollRef.current += (targetScrollRef.current - currentScrollRef.current) * ease;
       const exactFrame = currentScrollRef.current * (totalFrames - 1) + 1;
-      const frameIndex = Math.min(totalFrames, Math.max(1, Math.round(exactFrame)));
-      const img = imagesRef.current[frameIndex];
+      let frameIndex = Math.min(totalFrames, Math.max(1, Math.round(exactFrame)));
 
-      if (img && img.complete) {
+      // Find the best available frame
+      let img = imagesRef.current[frameIndex];
+
+      // On mobile devices, memory limits may unload full size images, leaving img.complete=true but naturalWidth=0
+      if (!img || !img.complete || img.naturalWidth === 0) {
+        // Fallback to the last successfully loaded frame
+        img = imagesRef.current[lastDrawnFrame];
+      } else {
+        lastDrawnFrame = frameIndex;
+      }
+
+      if (img && img.complete && img.naturalWidth > 0) {
         const lw = canvas.logicalWidth || window.innerWidth;
         const lh = canvas.logicalHeight || window.innerHeight;
         ctx.clearRect(0, 0, lw, lh);
@@ -98,6 +119,7 @@ function App() {
       animationFrameId = window.requestAnimationFrame(render);
     };
 
+    // Draw the first frame ASAP
     render();
 
     return () => {
