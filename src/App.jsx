@@ -22,10 +22,8 @@ function App() {
   const currentScrollRef = useRef(0);
   const mobileRef = useRef(isMobile());
 
-  // ─── Desktop only: preload all frames ───────────────────────────────────────
+  // ─── Preload all frames ───────────────────────────────────────
   useEffect(() => {
-    if (mobileRef.current) return; // skip on mobile
-
     for (let i = 1; i <= totalFrames; i++) {
       const img = new Image();
       const frameNum = i.toString().padStart(3, '0');
@@ -47,46 +45,8 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ─── Mobile only: load single static frame ───────────────────────────────────
+  // ─── Animated render loop ──────────────────────────────────────
   useEffect(() => {
-    if (!mobileRef.current) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false });
-
-    const setup = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    setup();
-    window.addEventListener('resize', setup);
-
-    const img = new Image();
-    img.src = '/images/BG/ezgif-frame-001.jpg';
-    img.onload = () => {
-      const w = canvas.width;
-      const h = canvas.height;
-      const canvasRatio = w / h;
-      const imgRatio = img.width / img.height;
-      let rw = img.width, rh = img.height, rx = 0, ry = 0;
-      if (canvasRatio > imgRatio) {
-        rh = img.width / canvasRatio;
-        ry = (img.height - rh) / 2;
-      } else {
-        rw = img.height * canvasRatio;
-        rx = (img.width - rw) / 2;
-      }
-      ctx.drawImage(img, rx, ry, rw, rh, 0, 0, w, h);
-    };
-
-    return () => window.removeEventListener('resize', setup);
-  }, []);
-
-  // ─── Desktop only: animated render loop ──────────────────────────────────────
-  useEffect(() => {
-    if (mobileRef.current) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
