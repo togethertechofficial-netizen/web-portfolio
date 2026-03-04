@@ -26,7 +26,7 @@ const Hero = () => {
                         Professional Web Development for <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-teal to-blue-400">Local Businesses</span>
                     </h1>
 
-                    <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl font-body leading-relaxed text-shadow-sm">
+                    <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl font-body leading-relaxed text-shadow-sm">
                         Beautiful, fast, and mobile-optimized websites that turn visitors into loyal customers. Stand out in the digital landscape.
                     </p>
 
@@ -54,7 +54,7 @@ const Hero = () => {
                         </div>
                         <div className="flex flex-col items-start transition-transform duration-300 group-hover:translate-x-1">
                             <span className="font-bold text-lg leading-none group-hover:text-white transition-colors duration-300">5+</span>
-                            <span className="text-sm text-muted-gray group-hover:text-light-muted transition-colors duration-300">Projects Done</span>
+                            <span className="text-sm text-gray-200 group-hover:text-light-muted transition-colors duration-300">Projects Done</span>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@ const Hero = () => {
                         </div>
                         <div className="flex flex-col items-start transition-transform duration-300 group-hover:translate-x-1">
                             <span className="font-bold text-lg leading-none group-hover:text-white transition-colors duration-300">100%</span>
-                            <span className="text-sm text-muted-gray group-hover:text-light-muted transition-colors duration-300">Satisfied Clients</span>
+                            <span className="text-sm text-gray-200 group-hover:text-light-muted transition-colors duration-300">Satisfied Clients</span>
                         </div>
                     </div>
 
@@ -74,7 +74,7 @@ const Hero = () => {
                         </div>
                         <div className="flex flex-col items-start transition-transform duration-300 group-hover:translate-x-1">
                             <span className="font-bold text-lg leading-none group-hover:text-white transition-colors duration-300">30 Days</span>
-                            <span className="text-sm text-muted-gray group-hover:text-light-muted transition-colors duration-300">Fast Delivery</span>
+                            <span className="text-sm text-gray-200 group-hover:text-light-muted transition-colors duration-300">Fast Delivery</span>
                         </div>
                     </div>
                 </motion.div>

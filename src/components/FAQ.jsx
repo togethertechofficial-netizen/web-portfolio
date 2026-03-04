@@ -50,7 +50,7 @@ const FAQ = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg text-muted-gray font-body"
+                        className="text-lg text-gray-200 font-body"
                     >
                         Everything you need to know about working with us.
                     </motion.p>
@@ -76,7 +76,7 @@ const FAQ = () => {
                                 <h3 className={`font-display font-semibold text-lg pr-8 ${openIndex === index ? 'text-accent-teal' : 'text-light-text'}`}>
                                     {faq.question}
                                 </h3>
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${openIndex === index ? 'bg-accent-teal text-dark-bg' : 'bg-gray-800 text-gray-400'}`}>
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${openIndex === index ? 'bg-accent-teal text-dark-bg' : 'bg-gray-800 text-gray-200'}`}>
                                     {openIndex === index ? <Minus size={18} /> : <Plus size={18} />}
                                 </div>
                             </button>
@@ -89,7 +89,7 @@ const FAQ = () => {
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.3, ease: "easeInOut" }}
                                     >
-                                        <div className="px-6 pb-6 text-muted-gray leading-relaxed pt-2">
+                                        <div className="px-6 pb-6 text-gray-200 leading-relaxed pt-2">
                                             <div className="h-px w-full bg-gradient-to-r from-accent-teal/20 to-transparent mb-4"></div>
                                             {faq.answer}
                                         </div>

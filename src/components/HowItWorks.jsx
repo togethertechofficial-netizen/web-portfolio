@@ -44,7 +44,7 @@ const HowItWorks = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg text-muted-gray font-body"
+                        className="text-lg text-gray-200 font-body"
                     >
                         A simple, transparent 3-step process designed to get your business online quickly and effectively.
                     </motion.p>
@@ -72,7 +72,7 @@ const HowItWorks = () => {
                             <h3 className="text-2xl font-display font-bold mb-4 text-light-text group-hover:text-accent-teal transition-colors duration-300">
                                 {step.title}
                             </h3>
-                            <p className="text-muted-gray font-body leading-relaxed max-w-sm">
+                            <p className="text-gray-200 font-body leading-relaxed max-w-sm">
                                 {step.desc}
                             </p>
                         </motion.div>

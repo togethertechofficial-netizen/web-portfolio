@@ -44,7 +44,7 @@ const CaseStudies = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg text-muted-gray font-body"
+                        className="text-lg text-gray-200 font-body"
                     >
                         Don't just take our word for it. See how we've transformed the digital presence of local brands.
                     </motion.p>
@@ -77,12 +77,12 @@ const CaseStudies = () => {
 
                                 <div className="space-y-6 mb-10 w-full">
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Challenge</h4>
-                                        <p className="text-muted-gray">{project.challenge}</p>
+                                        <h4 className="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-2">Challenge</h4>
+                                        <p className="text-gray-200">{project.challenge}</p>
                                     </div>
                                     <div className="h-px w-full bg-gray-800"></div>
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Solution</h4>
+                                        <h4 className="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-2">Solution</h4>
                                         <p className="text-light-muted">{project.solution}</p>
                                     </div>
                                 </div>

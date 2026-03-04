@@ -54,7 +54,7 @@ const WhyChooseUs = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg text-muted-gray font-body font-medium"
+                        className="text-lg text-gray-200 font-body font-medium"
                     >
                         We combine high-end development with a personalized, local touch.
                     </motion.p>
@@ -74,7 +74,7 @@ const WhyChooseUs = () => {
                                 {reason.icon}
                             </div>
                             <h3 className="text-xl font-display font-bold text-white mb-3 tracking-wide">{reason.title}</h3>
-                            <p className="text-muted-gray leading-relaxed text-sm">
+                            <p className="text-gray-200 leading-relaxed text-sm">
                                 {reason.desc}
                             </p>
                         </motion.div>

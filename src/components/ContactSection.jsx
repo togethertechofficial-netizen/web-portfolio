@@ -75,7 +75,7 @@ const ContactSection = () => {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.1 }}
-                            className="text-lg text-muted-gray mb-10 leading-relaxed max-w-md"
+                            className="text-lg text-gray-200 mb-10 leading-relaxed max-w-md"
                         >
                             Fill out the form to get your free website audit and project quote.
                             We typically respond within 2-4 hours during business days.
@@ -160,7 +160,7 @@ const ContactSection = () => {
                             <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="user_name">Your Name</label>
+                                        <label className="text-sm font-medium text-gray-200 pl-1" htmlFor="user_name">Your Name</label>
                                         <input
                                             type="text"
                                             id="user_name"
@@ -173,7 +173,7 @@ const ContactSection = () => {
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="whatsapp">WhatsApp Number</label>
+                                        <label className="text-sm font-medium text-gray-200 pl-1" htmlFor="whatsapp">WhatsApp Number</label>
                                         <input
                                             type="tel"
                                             id="whatsapp"
@@ -188,7 +188,7 @@ const ContactSection = () => {
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="email">Email Address</label>
+                                    <label className="text-sm font-medium text-gray-200 pl-1" htmlFor="email">Email Address</label>
                                     <input
                                         type="email"
                                         id="email"
@@ -202,7 +202,7 @@ const ContactSection = () => {
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="business_type">Business Type</label>
+                                    <label className="text-sm font-medium text-gray-200 pl-1" htmlFor="business_type">Business Type</label>
                                     <select
                                         id="business_type"
                                         name="business_type"
@@ -221,7 +221,7 @@ const ContactSection = () => {
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-gray-400 pl-1" htmlFor="message">Message Details</label>
+                                    <label className="text-sm font-medium text-gray-200 pl-1" htmlFor="message">Message Details</label>
                                     <textarea
                                         id="message"
                                         name="message"

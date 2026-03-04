@@ -66,7 +66,7 @@ const PricingSection = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-lg text-muted-gray font-body"
+                        className="text-lg text-gray-200 font-body"
                     >
                         No hidden costs. Choose the perfect website package for your business size and growth goals.
                     </motion.p>
@@ -93,7 +93,7 @@ const PricingSection = () => {
 
                             <div className="text-center mb-8 pt-4">
                                 <h3 className="text-2xl font-display font-bold text-light-text mb-2">{plan.name}</h3>
-                                <p className="text-sm text-gray-400 mb-6 h-5">{plan.target}</p>
+                                <p className="text-sm text-gray-200 mb-6 h-5">{plan.target}</p>
                                 <div className="text-4xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
                                     {plan.price}
                                 </div>
